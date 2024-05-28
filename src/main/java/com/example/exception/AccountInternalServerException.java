@@ -1,8 +1,13 @@
 package com.example.exception;
 
-public class AccountInternalServerException extends Exception {
+public class AccountInternalServerException extends RuntimeException {
     
-    public AccountInternalServerException(String mssg, Exception ex){
-        super(mssg, ex);
+    public AccountInternalServerException(String message){
+        super(message);
+    }
+
+    public AccountInternalServerException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
+    

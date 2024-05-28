@@ -14,6 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * This class is entity class
+ * contain all field related to database column
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +42,6 @@ public class Account {
     @Column(name = "iso4217_currency_code")
     private String iso4217Currency;
 
-    @NotNull(message = "Balance should not be negative")
     @Column(columnDefinition = "INTEGER DEFAULT 0", nullable = false)
     private int balance;
 
