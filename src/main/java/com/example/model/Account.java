@@ -40,8 +40,8 @@ public class Account {
 
     @NotNull(message = "Balance should not be negative")
     @Column(columnDefinition = "INTEGER DEFAULT 0", nullable = false)
-    private Integer balance = 0;
+    private int balance;
 
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted = false;
 
 }
