@@ -30,7 +30,7 @@ public class Account {
     @Column(name = "Account UUID")
     private UUID accountId;
 
-    @NotNull(message = "Account number can not nbe null.")
+    @NotNull(message = "Account number can not be null or negative.")
     @Column(name = "account_number", nullable = false)
     private Integer accountNumber;
 
