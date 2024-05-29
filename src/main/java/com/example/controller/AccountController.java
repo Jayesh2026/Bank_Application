@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /*
  * This is Controller class
@@ -42,8 +43,8 @@ public class AccountController {
         return new ResponseEntity<>(successRespo, HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<SuccessResponse> getAccountByAccountNumber(@Valid @RequestParam("accountNumber") Integer accountNumber){
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<SuccessResponse> getAccountByAccountNumber(@Valid @PathVariable("accountNumber") Integer accountNumber){
         Account account = accountService.getAccountByAccountNumber(accountNumber);
         SuccessResponse successResponse = new SuccessResponse("Account retrieve successfully", HttpStatus.FOUND.value(), account);
         return new ResponseEntity<>(successResponse, HttpStatus.FOUND);
@@ -70,15 +71,15 @@ public class AccountController {
         return new ResponseEntity<>(successResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<SuccessResponse> updateAccount(@Valid @RequestParam("accountNumber") Integer account,@Valid @RequestParam("newBalance") int balance){
-        Account accountt = accountService.updateAccount(account, balance);
+    @PutMapping("/{accountNumber}")
+    public ResponseEntity<SuccessResponse> updateAccount(@PathVariable("accountNumber") Integer accountNumber, @RequestParam("newBalance") int newBalance){
+        Account accountt = accountService.updateAccount(accountNumber, newBalance);
         SuccessResponse successResponse = new SuccessResponse("Your data is updated successfully", HttpStatus.OK.value(), accountt);
         return new ResponseEntity<>(successResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<SuccessResponse> deleteAccount(@Valid @RequestParam("accountNumber") Integer accountNumber){
+    @DeleteMapping("/{accountNumber}")
+    public ResponseEntity<SuccessResponse> deleteAccount(@PathVariable("accountNumber") Integer accountNumber){
         accountService.deleteAccount(accountNumber);
         SuccessResponse successResponse = new SuccessResponse();
             successResponse.setMessage("Account deleted successfully");

@@ -23,7 +23,9 @@ public class AccountServiceImpl implements AccountService{
     // create account
     @Override
     public Account createAccount(Account account){
+        
         boolean exist = accountRepo.existsByAccountNumber(account.getAccountNumber());
+
         if(exist){
             throw new AccountNumberAlreadyExistsException("This account number already exits");
         }
@@ -36,7 +38,7 @@ public class AccountServiceImpl implements AccountService{
         Optional<Account> account = accountRepo.findByAccountNumber(accountNumber);
 
         if(!account.isPresent()){
-            throw new AccountNotFoundException("This account is not present.");
+            throw new AccountNotFoundException("This account number is not present.");
         }
         return account.get();
     }
@@ -72,8 +74,6 @@ public class AccountServiceImpl implements AccountService{
         return unDeletedAccounts;
     }
 
-    
-
     // delete account but not from database
     @Override
     public void deleteAccount(Integer accountNumber){
@@ -81,15 +81,19 @@ public class AccountServiceImpl implements AccountService{
 
         if(account.isPresent()){
             Account acc = account.get();
-            acc.setDeleted(true);
 
+            if(acc.isDeleted()){
+                throw new AccountInternalServerException("This account is already deleted");
+            }
+            
+            acc.setDeleted(true);
             accountRepo.save(acc);
         }else{
             throw new AccountNotFoundException("This account number not found");
         }
     }
 
-    // Update account balance 
+    // Update account balance
     @Override
     public Account updateAccount(Integer accountNumber, int newBalance) {
         Optional<Account> acc = accountRepo.findByAccountNumber(accountNumber);
@@ -97,6 +101,9 @@ public class AccountServiceImpl implements AccountService{
             Account account = acc.get();
             if(account.isDeleted()){
                 throw new AccountNotFoundException("This account balance cannot be updated, because is not present or deleted.");
+            }
+            if(newBalance < 0){
+                throw new IllegalArgumentException("New balance cannot be negative.");
             }
             newBalance =  account.getBalance() + newBalance;
             account.setBalance(newBalance);
