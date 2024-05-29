@@ -21,7 +21,7 @@ public interface AccountService {
     public List<Account> getAll_DeletedAccount();
 
     //update account balance or currency code
-    public Account updateAccount(Integer accountNumber, int newBalance);
+    public Account updateAccount(Account updateAccount);
 
     //delete account
     public void deleteAccount(Integer accountNumber);

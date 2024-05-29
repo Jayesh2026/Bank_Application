@@ -23,7 +23,6 @@ public class AccountServiceImpl implements AccountService{
     // create account
     @Override
     public Account createAccount(Account account){
-        
         boolean exist = accountRepo.existsByAccountNumber(account.getAccountNumber());
 
         if(exist){
@@ -63,7 +62,6 @@ public class AccountServiceImpl implements AccountService{
         return deletedAccounts;
     }
 
-    
     //get all UnDeleted accounts
     @Override
     public List<Account> getAll_UnDeletedAccount(){
@@ -93,20 +91,39 @@ public class AccountServiceImpl implements AccountService{
         }
     }
 
-    // Update account balance
+    // Update account balance, currency code, or account type
     @Override
-    public Account updateAccount(Integer accountNumber, int newBalance) {
-        Optional<Account> acc = accountRepo.findByAccountNumber(accountNumber);
+    public Account updateAccount(Account updateAccount) {
+        Optional<Account> acc = accountRepo.findByAccountNumber(updateAccount.getAccountNumber());
+
         if(acc.isPresent()){
             Account account = acc.get();
             if(account.isDeleted()){
-                throw new AccountNotFoundException("This account balance cannot be updated, because is not present or deleted.");
+                throw new AccountNotFoundException("This account cannot be updated, because is not present or deleted.");
             }
+            
+            // updating new balance
+            int newBalance = updateAccount.getBalance();
             if(newBalance < 0){
-                throw new IllegalArgumentException("New balance cannot be negative.");
+                throw new IllegalArgumentException("New balance can not be negative");
+            }else if (newBalance >= 0) {
+                int oldBalance = account.getBalance();
+                int updatedBalance = oldBalance + newBalance;
+                account.setBalance(updatedBalance);
             }
-            newBalance =  account.getBalance() + newBalance;
-            account.setBalance(newBalance);
+
+            // updating account type
+            String newAccountType = updateAccount.getAccountType();
+            if(newAccountType != null && !newAccountType.isEmpty()){
+                account.setAccountType(newAccountType);
+            }
+
+            // updating currency code
+            String newCurrencyCode = updateAccount.getIso4217Currency();
+            if(newCurrencyCode != null && !newCurrencyCode.isEmpty()){
+                account.setIso4217Currency(newCurrencyCode);
+            }
+            
             return accountRepo.save(account);
         }else{
             throw new AccountNotFoundException("This account number not found");

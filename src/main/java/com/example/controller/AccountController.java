@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.model.Account;
@@ -72,9 +71,11 @@ public class AccountController {
     }
 
     @PutMapping("/{accountNumber}")
-    public ResponseEntity<SuccessResponse> updateAccount(@PathVariable("accountNumber") Integer accountNumber, @RequestParam("newBalance") int newBalance){
-        Account accountt = accountService.updateAccount(accountNumber, newBalance);
-        SuccessResponse successResponse = new SuccessResponse("Your data is updated successfully", HttpStatus.OK.value(), accountt);
+    public ResponseEntity<SuccessResponse> updateAccount(@PathVariable("accountNumber") Integer accountNumber, @RequestBody Account updateAccount){
+        updateAccount.setAccountNumber(accountNumber);
+
+        Account updatedAccount = accountService.updateAccount(updateAccount);
+        SuccessResponse successResponse = new SuccessResponse("Your data is updated successfully", HttpStatus.OK.value(), updatedAccount);
         return new ResponseEntity<>(successResponse, HttpStatus.OK);
     }
 
