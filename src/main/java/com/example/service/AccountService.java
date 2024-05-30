@@ -20,7 +20,7 @@ public interface AccountService {
     // get all deleted account details
     public List<Account> getAll_DeletedAccount();
 
-    //update account balance or currency code
+    //update account balance or currency code or account type
     public Account updateAccount(Account updateAccount);
 
     //delete account
