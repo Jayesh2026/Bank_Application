@@ -8,6 +8,7 @@ pipeline{
         echo 'Building the application....'
         echo 'Executing Gradle....'
         withGradle() {
+          sh 'chmod +x ./gradlew'
           sh './gradlew -v'
           sh './gradlew clean build -x test'
         }
